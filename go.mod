@@ -1,4 +1,4 @@
-module gitee.com/menciis/hubur
+module github.com/iami317/hubur
 
 go 1.21
 
