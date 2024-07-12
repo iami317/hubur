@@ -2,6 +2,8 @@ package hubur
 
 import (
 	"bytes"
+	"github.com/denisbrodbeck/machineid"
+	uuid "github.com/satori/go.uuid"
 	"os"
 	"os/exec"
 	"runtime"
@@ -65,4 +67,34 @@ func ExecCommand(command string) (stdout, stderr string, err error) {
 	stdout = string(out.Bytes())
 
 	return
+}
+
+func GetMachineidId() string {
+	id, _ := machineid.ID()
+	return id
+}
+
+func GetUuid() string {
+	return uuid.NewV4().String()
+}
+
+func GetOsType() int {
+	switch runtime.GOOS {
+	case "darwin":
+		return 3
+	case "windows":
+		return 1
+	case "linux":
+		return 2
+	default:
+		return 3
+	}
+}
+
+// RunFuncName 获取正在运行的函数名
+func RunFuncName() string {
+	pc := make([]uintptr, 1)
+	runtime.Callers(2, pc)
+	f := runtime.FuncForPC(pc[0])
+	return f.Name()
 }

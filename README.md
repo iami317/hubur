@@ -10,6 +10,7 @@
 - time.go 时间处理
 - url.go url处理
 - network.go 网络连接相关
+- net.go 网络连接相关
 - machine.go 获取机器uuid
 - netutils.go 网络处理
 - parse_domain.go 域名解析

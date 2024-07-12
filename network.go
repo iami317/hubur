@@ -72,7 +72,7 @@ func (t *TimeoutConn) ReadUntil(until []byte, maxReadSize int) ([]byte, error) {
 	return buf, errors.New("max read size exceeded")
 }
 
-// 将缓冲区所有数据读完并返回, 相当于 conn 版的 ioutil.ReadAll
+// ReadAll 将缓冲区所有数据读完并返回, 相当于 conn 版的 ioutil.ReadAll
 func (t *TimeoutConn) ReadAll() ([]byte, error) {
 	var ret []byte
 	for {
