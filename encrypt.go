@@ -6,6 +6,8 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"fmt"
+	"github.com/spf13/cast"
+	"github.com/twmb/murmur3"
 )
 
 func AESEncrypt(plainText string, keyByte []byte) (string, error) {
@@ -99,4 +101,29 @@ func Base64Decode(data string) (string, error) {
 
 func Base64Encode(data []byte) string {
 	return base64.StdEncoding.EncodeToString(data)
+}
+
+// Mmh3Base64Encode 计算 base64 的值,mmh3 base64 编码，编码后的数据要求每 76 个字符加上换行符。具体原因 RFC 822 文档上有说明。然后 32 位 mmh3 hash
+func Mmh3Base64Encode(braw string) string {
+	bckd := base64.StdEncoding.EncodeToString([]byte(braw))
+	var buffer bytes.Buffer
+	for i := 0; i < len(bckd); i++ {
+		ch := bckd[i]
+		buffer.WriteByte(ch)
+		if (i+1)%76 == 0 {
+			buffer.WriteByte('\n')
+		}
+	}
+	buffer.WriteByte('\n')
+	return buffer.String()
+}
+
+func Mmh3Hash32(raw string) string {
+	h32 := murmur3.New32()
+	_, _ = h32.Write([]byte(raw))
+	return fmt.Sprintf("%d", int32(h32.Sum32()))
+}
+
+func FaviconHash(favicon []byte) int64 {
+	return cast.ToInt64(Mmh3Hash32(Mmh3Base64Encode(string(favicon))))
 }
